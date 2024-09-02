@@ -1,0 +1,5 @@
+﻿
+Install Package from NuGet Package Manager Console
+> Swashbuckle.AspNetCore.Swagger
+> Swashbuckle.AspNetCore.SwaggerGen
+> Swashbuckle.AspNetCore.SwaggerUI

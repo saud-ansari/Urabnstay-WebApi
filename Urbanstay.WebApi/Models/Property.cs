@@ -30,6 +30,7 @@ namespace Urbanstay.WebApi.Models
         public bool? InstantBooking { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string ImagePath { get; set; }
 
         public virtual User Host { get; set; }
         public virtual ICollection<Booking> Bookings { get; set; }

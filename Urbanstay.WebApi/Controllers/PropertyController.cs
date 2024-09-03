@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Urbanstay.WebApi.Models;
 using Urbanstay.WebApi.ViewModels;
 using static Urbanstay.WebApi.ViewModels.AddProperty;
@@ -28,6 +30,7 @@ namespace Urbanstay.WebApi.Controllers
                 x.HostId,
                 x.Title,
                 x.Description,
+                x.ImagePath,
                 x.IsActive,
                 x.Address,
                 x.City,
@@ -60,6 +63,7 @@ namespace Urbanstay.WebApi.Controllers
                 x.HostId,
                 x.Title,
                 x.Description,
+                x.ImagePath,
                 x.IsActive,
                 x.Address,
                 x.City,
@@ -108,6 +112,7 @@ namespace Urbanstay.WebApi.Controllers
                 property.AvailabilityCalendar = _addProperty.AvailabilityCalendar;
                 property.HouseRules = _addProperty.HouseRules;
                 property.InstantBooking = _addProperty.InstantBooking;
+                property.ImagePath = _addProperty.ImagePath;
                 property.CreatedAt = DateTime.Now;
                 property.UpdatedAt = null;
             }
@@ -142,6 +147,7 @@ namespace Urbanstay.WebApi.Controllers
                 property.AvailabilityCalendar = _property.AvailabilityCalendar;
                 property.HouseRules = _property.HouseRules;
                 property.InstantBooking = _property.InstantBooking;
+                property.ImagePath = _property.ImagePath;
                 property.UpdatedAt = DateTime.Now;
             }
 
@@ -167,5 +173,24 @@ namespace Urbanstay.WebApi.Controllers
                 return BadRequest("No Id Found");
             }
         }
+
+       [HttpPost("upload")]
+        public async Task<IActionResult> UploadImage(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("No file uploaded.");
+            }
+
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProfilePic");
+            var filePath = Path.Combine(uploadsFolder, file.FileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            return Ok(new { ImagePath = file.FileName });
+        }   
     }
 }

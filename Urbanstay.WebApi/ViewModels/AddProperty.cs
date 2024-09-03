@@ -22,6 +22,7 @@ namespace Urbanstay.WebApi.ViewModels
         public bool? InstantBooking { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public string ImagePath { get; set; }
 
 
         public class EditProperty
@@ -42,6 +43,7 @@ namespace Urbanstay.WebApi.ViewModels
             public string HouseRules { get; set; }
             public bool? InstantBooking { get; set; }
             public DateTime? UpdatedAt { get; set; }
+            public string ImagePath { get; set; }
         }
 
         public static implicit operator AddProperty(Property v)

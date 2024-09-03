@@ -152,7 +152,7 @@ namespace Urbanstay.WebApi.Controllers
             }
 
             return Ok(new { ImagePath = file.FileName });
-        }
+        }   
 
         [HttpPost("Reviews")]
         public IActionResult Post(ReviewResponse review)

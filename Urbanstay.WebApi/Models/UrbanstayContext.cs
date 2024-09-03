@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -140,6 +142,10 @@ namespace Urbanstay.WebApi.Models
                     .HasColumnType("text");
 
                 entity.Property(e => e.HouseRules).HasColumnType("text");
+
+                entity.Property(e => e.ImagePath)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.InstantBooking).HasDefaultValueSql("((0))");
 

@@ -147,6 +147,22 @@ namespace Urbanstay.WebApi.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.Property(e => e.ImagePath2)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ImagePath3)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ImagePath4)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ImagePath5)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.InstantBooking).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.PricePerNight).HasColumnType("decimal(10, 2)");

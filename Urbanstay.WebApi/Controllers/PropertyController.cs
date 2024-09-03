@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,6 +32,10 @@ namespace Urbanstay.WebApi.Controllers
                 x.Title,
                 x.Description,
                 x.ImagePath,
+                x.ImagePath2,
+                x.ImagePath3,
+                x.ImagePath4,
+                x.ImagePath5,
                 x.IsActive,
                 x.Address,
                 x.City,
@@ -38,6 +43,7 @@ namespace Urbanstay.WebApi.Controllers
                 x.ZipCode,
                 x.PropertyType,
                 x.AvailabilityCalendar,
+                x.PricePerNight,
                 x.HouseRules,
                 x.InstantBooking,
                 x.CreatedAt,
@@ -57,13 +63,17 @@ namespace Urbanstay.WebApi.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetById(int id)
         {
-            var user = _appdbContext.Properties.Where(x =>x.PropertyId == id).Select(x => new
+            var user = _appdbContext.Properties.Where(x => x.PropertyId == id).Select(x => new
             {
                 x.PropertyId,
                 x.HostId,
                 x.Title,
                 x.Description,
                 x.ImagePath,
+                x.ImagePath2,
+                x.ImagePath3,
+                x.ImagePath4,
+                x.ImagePath5,
                 x.IsActive,
                 x.Address,
                 x.City,
@@ -71,6 +81,7 @@ namespace Urbanstay.WebApi.Controllers
                 x.ZipCode,
                 x.PropertyType,
                 x.AvailabilityCalendar,
+                x.PricePerNight,
                 x.HouseRules,
                 x.InstantBooking,
                 x.CreatedAt,
@@ -97,24 +108,30 @@ namespace Urbanstay.WebApi.Controllers
             }
             else
             {
-                property = new Property();
-                property.HostId = _addProperty.HostId;
-                property.Title = _addProperty.Title;
-                property.Description = _addProperty.Description;
-                property.IsActive = _addProperty.IsActive;
-                property.Address = _addProperty.Address;
-                property.City = _addProperty.City;
-                property.Country = _addProperty.Country;
-                property.State = _addProperty.State;
-                property.ZipCode = _addProperty.ZipCode;
-                property.PropertyType = _addProperty.PropertyType;
-                property.PricePerNight = _addProperty.PricePerNight;
-                property.AvailabilityCalendar = _addProperty.AvailabilityCalendar;
-                property.HouseRules = _addProperty.HouseRules;
-                property.InstantBooking = _addProperty.InstantBooking;
-                property.ImagePath = _addProperty.ImagePath;
-                property.CreatedAt = DateTime.Now;
-                property.UpdatedAt = null;
+                property = new Property
+                {
+                    HostId = _addProperty.HostId,
+                    Title = _addProperty.Title,
+                    Description = _addProperty.Description,
+                    IsActive = _addProperty.IsActive,
+                    Address = _addProperty.Address,
+                    City = _addProperty.City,
+                    Country = _addProperty.Country,
+                    State = _addProperty.State,
+                    ZipCode = _addProperty.ZipCode,
+                    PropertyType = _addProperty.PropertyType,
+                    PricePerNight = _addProperty.PricePerNight,
+                    AvailabilityCalendar = _addProperty.AvailabilityCalendar,
+                    HouseRules = _addProperty.HouseRules,
+                    InstantBooking = _addProperty.InstantBooking,
+                    ImagePath = _addProperty.ImagePath,
+                    ImagePath2 = _addProperty.ImagePath2,
+                    ImagePath3 = _addProperty.ImagePath3,
+                    ImagePath4 = _addProperty.ImagePath4,
+                    ImagePath5 = _addProperty.ImagePath5,
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = null
+                };
             }
             _appdbContext.Properties.Add(property);
             var result = _appdbContext.SaveChanges() > 0;
@@ -148,6 +165,10 @@ namespace Urbanstay.WebApi.Controllers
                 property.HouseRules = _property.HouseRules;
                 property.InstantBooking = _property.InstantBooking;
                 property.ImagePath = _property.ImagePath;
+                property.ImagePath2 = _property.ImagePath2;
+                property.ImagePath3 = _property.ImagePath3;
+                property.ImagePath4 = _property.ImagePath4;
+                property.ImagePath5 = _property.ImagePath5;
                 property.UpdatedAt = DateTime.Now;
             }
 
@@ -174,23 +195,34 @@ namespace Urbanstay.WebApi.Controllers
             }
         }
 
-       [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage(IFormFile file)
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadImages(List<IFormFile> files)
         {
-            if (file == null || file.Length == 0)
+            if (files == null || files.Count != 5)
             {
-                return BadRequest("No file uploaded.");
+                return BadRequest("Please upload exactly 5 images.");
             }
 
-            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "ProfilePic");
-            var filePath = Path.Combine(uploadsFolder, file.FileName);
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "PropertyImg");
+            var imagePaths = new List<string>();
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            foreach (var file in files)
             {
-                await file.CopyToAsync(stream);
+                if (file.Length > 0)
+                {
+                    var filePath = Path.Combine(uploadsFolder, file.FileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+
+                    imagePaths.Add(file.FileName);
+                }
             }
 
-            return Ok(new { ImagePath = file.FileName });
-        }   
+            return Ok(new { ImagePaths = imagePaths });
+        }
+
     }
 }

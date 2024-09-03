@@ -23,6 +23,10 @@ namespace Urbanstay.WebApi.ViewModels
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string ImagePath { get; set; }
+        public string ImagePath2 { get; set; }
+        public string ImagePath3 { get; set; }
+        public string ImagePath4 { get; set; }
+        public string ImagePath5 { get; set; }
 
 
         public class EditProperty
@@ -44,6 +48,10 @@ namespace Urbanstay.WebApi.ViewModels
             public bool? InstantBooking { get; set; }
             public DateTime? UpdatedAt { get; set; }
             public string ImagePath { get; set; }
+            public string ImagePath2 { get; set; }
+            public string ImagePath3 { get; set; }
+            public string ImagePath4 { get; set; }
+            public string ImagePath5 { get; set; }
         }
 
         public static implicit operator AddProperty(Property v)

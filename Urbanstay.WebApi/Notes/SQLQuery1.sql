@@ -96,7 +96,12 @@ CREATE TABLE [Properties]
     [HouseRules] TEXT,
     [InstantBooking] BIT DEFAULT 0,
     [CreatedAt] DATETIME DEFAULT GETDATE(),
-    [UpdatedAt] DATETIME DEFAULT GETDATE()
+    [UpdatedAt] DATETIME DEFAULT GETDATE(),
+    [ImagePath] VARCHAR(50),
+    [ImagePath2] VARCHAR(50),
+    [ImagePath3] VARCHAR(50),
+    [ImagePath4] VARCHAR(50),
+    [ImagePath5] VARCHAR(50)
 )
 
 --SELECT * FROM [Properties]

@@ -29,6 +29,7 @@ namespace Urbanstay.WebApi.Controllers
             {
                 x.PropertyId,
                 x.HostId,
+                HostName = x.Host.Username,
                 x.Title,
                 x.Description,
                 x.ImagePath,
@@ -60,7 +61,7 @@ namespace Urbanstay.WebApi.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("ById/{id:int}")]
         public IActionResult GetById(int id)
         {
             var user = _appdbContext.Properties.Where(x => x.PropertyId == id).Select(x => new
@@ -78,6 +79,7 @@ namespace Urbanstay.WebApi.Controllers
                 x.Address,
                 x.City,
                 x.Country,
+                x.State,
                 x.ZipCode,
                 x.PropertyType,
                 x.AvailabilityCalendar,
@@ -96,6 +98,97 @@ namespace Urbanstay.WebApi.Controllers
                 })
             }).ToList();
             return Ok(user);
+        }
+
+        [HttpGet("ByHostId/{Id:int}")]
+        public IActionResult GetByHostId(int Id)
+        {
+            var user = _appdbContext.Properties.Where(x => x.HostId == Id).Select(x => new
+            {
+                x.PropertyId,
+                x.HostId,
+                x.Title,
+                x.Description,
+                x.ImagePath,
+                x.ImagePath2,
+                x.ImagePath3,
+                x.ImagePath4,
+                x.ImagePath5,
+                x.IsActive,
+                x.Address,
+                x.City,
+                x.Country,
+                x.State,
+                x.ZipCode,
+                x.PropertyType,
+                x.AvailabilityCalendar,
+                x.PricePerNight,
+                x.HouseRules,
+                x.InstantBooking,
+                x.CreatedAt,
+                x.UpdatedAt,
+                Review = x.Reviews.Select(r => new
+                {
+                    r.PropertyId,
+                    r.Reviewer.Username,
+                    r.Comment,
+                    r.CreatedAt
+
+                })
+            }).ToList();
+            return Ok(user);
+        }
+
+        [HttpGet("SearchByDateAndCity")]
+        public IActionResult SearchByDateAndCity(DateTime checkInDate, DateTime checkOutDate, string city)
+        {
+            // Filter properties based on city and availability
+            var availableProperties = _appdbContext.Properties
+                .Where(x => x.City.ToLower() == city.ToLower() && x.IsActive) // Filter by city and active properties
+                .Where(x => !_appdbContext.Bookings.Any(b =>
+                    b.PropertyId == x.PropertyId &&
+                    b.Status == "confirmed" && // Check only confirmed bookings
+                    (
+                        (checkInDate >= b.CheckInDate && checkInDate < b.CheckOutDate) || // Start date overlaps
+                        (checkOutDate > b.CheckInDate && checkOutDate <= b.CheckOutDate) || // End date overlaps
+                        (checkInDate <= b.CheckInDate && checkOutDate >= b.CheckOutDate) // Envelops existing booking
+                    )
+                ))
+                .Select(x => new
+                {
+                    x.PropertyId,
+                    x.HostId,
+                    x.Title,
+                    x.Description,
+                    x.ImagePath,
+                    x.ImagePath2,
+                    x.ImagePath3,
+                    x.ImagePath4,
+                    x.ImagePath5,
+                    x.IsActive,
+                    x.Address,
+                    x.City,
+                    x.Country,
+                    x.State,
+                    x.ZipCode,
+                    x.PropertyType,
+                    x.AvailabilityCalendar,
+                    x.PricePerNight,
+                    x.HouseRules,
+                    x.InstantBooking,
+                    x.CreatedAt,
+                    x.UpdatedAt,
+                    Review = x.Reviews.Select(r => new
+                    {
+                        r.PropertyId,
+                        r.Reviewer.Username,
+                        r.Comment,
+                        r.CreatedAt
+                    })
+                })
+                .ToList();
+
+            return Ok(availableProperties);
         }
 
         [HttpPost]
@@ -142,7 +235,7 @@ namespace Urbanstay.WebApi.Controllers
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, EditProperty _property)
         {
-            var property = _appdbContext.Properties.Where(x => x.PropertyId == id && x.IsActive).FirstOrDefault();
+            var property = _appdbContext.Properties.Where(x => x.PropertyId == id ).FirstOrDefault();
 
             if (property == null)
             {

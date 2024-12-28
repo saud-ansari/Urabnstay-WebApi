@@ -174,5 +174,23 @@ namespace Urbanstay.WebApi.Controllers
             var result = dbContext.SaveChanges() > 0;
             return Ok(result);  
         }
+
+        [HttpPut("changePassword/{id:int}")]
+        public IActionResult ChangePassword(int id,string oldPassword, string newPassword)
+        {
+            var user = dbContext.Users.FirstOrDefault(x=> x.Id == id && x.Password == oldPassword);
+            if(user == null)
+            {
+                return BadRequest("Please Put Your Correct Old Password");
+            }
+            else
+            {
+              user.Password = newPassword;
+            }
+            dbContext.SaveChanges();
+            dbContext.Users.Update(user);
+            return Ok("Password Changed SuccessFully");
+        }
+
     }
 }

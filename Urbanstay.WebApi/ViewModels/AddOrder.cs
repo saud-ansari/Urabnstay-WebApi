@@ -11,8 +11,8 @@ namespace Urbanstay.WebApi.ViewModels
         public DateTime CheckOutDate { get; set; }
         public int NumberOfGuests { get; set; }
         public decimal TotalPrice { get; set; }
-        public string Status { get; set; }
-        public DateTime? CreatedAt { get; set; }
+        //public string Status { get; set; }
+        //public DateTime? CreatedAt { get; set; }
     }
 
     public class EditOrder

@@ -27,6 +27,11 @@ namespace Urbanstay.WebApi.Controllers
                 propertyName = x.Property.Title,
                 GuestName = x.Guest.FirstName + " " + x.Guest.LastName,
                 HostName = x.Host.FirstName + " " + x.Host.LastName,
+                x.Property.ImagePath,
+                x.Property.ImagePath2,
+                x.Property.ImagePath3,
+                x.Property.ImagePath4,
+                x.Property.ImagePath5,
                 x.CheckInDate,
                 x.CheckOutDate,
                 x.NumberOfGuests,
@@ -43,30 +48,79 @@ namespace Urbanstay.WebApi.Controllers
             return Ok(order);
         }
 
+        [HttpGet("{hostid:int}")]
+        public IActionResult GetById(int hostid)
+        {
+            var user = _appdbContext.Bookings.Where(x => x.HostId == hostid).Select(x => new
+            {
+                x.BookingId,
+                propertyName = x.Property.Title,
+                GuestName = x.Guest.FirstName + " " + x.Guest.LastName,
+                x.Property.ImagePath,
+                x.Property.ImagePath2,
+                x.Property.ImagePath3,
+                x.Property.ImagePath4,
+                x.Property.ImagePath5,
+                x.CheckInDate,
+                x.CheckOutDate,
+                x.NumberOfGuests,
+                x.TotalPrice,
+                x.Status,
+                x.CreatedAt,
+                x.UpdatedAt,
+                Payment = x.Payments.Select(p => new
+                {
+                    p.Amount,
+                    p.PaymentStatus
+                })
+            }).ToList();
+            return Ok(user);
+        }
+
         [HttpPost]
         public IActionResult Post(AddOrder _order)
         {
-            var order = new Booking();
-            order.PropertyId = _order.PropertyId;
-            order.GuestId = _order.GuestId;
-            order.HostId = _order.HostId;
-            order.CheckInDate = _order.CheckInDate;
-            order.CheckOutDate = _order.CheckOutDate;
-            order.NumberOfGuests = _order.NumberOfGuests;
-            order.TotalPrice = _order.TotalPrice;
-            order.Status = _order.Status;
-            order.CreatedAt = DateTime.Now;            
-        
+            // Check for overlapping bookings
+            var conflictingBooking = _appdbContext.Bookings.Any(b =>
+                b.PropertyId == _order.PropertyId &&
+                b.Status == "confirmed" && // Check only confirmed bookings
+                (
+                    (_order.CheckInDate >= b.CheckInDate && _order.CheckInDate < b.CheckOutDate) || // Start date overlaps
+                    (_order.CheckOutDate > b.CheckInDate && _order.CheckOutDate <= b.CheckOutDate) || // End date overlaps
+                    (_order.CheckInDate <= b.CheckInDate && _order.CheckOutDate >= b.CheckOutDate) // Envelops existing booking
+                )
+            );
+
+            if (conflictingBooking)
+            {
+                return BadRequest("The property is already booked for the selected dates.");
+            }
+
+            // Proceed with booking
+            var order = new Booking
+            {
+                PropertyId = _order.PropertyId,
+                GuestId = _order.GuestId,
+                HostId = _order.HostId,
+                CheckInDate = _order.CheckInDate,
+                CheckOutDate = _order.CheckOutDate,
+                NumberOfGuests = _order.NumberOfGuests,
+                TotalPrice = _order.TotalPrice,
+                Status = "pending",
+                CreatedAt = DateTime.Now
+            };
+
             _appdbContext.Bookings.Add(order);
             if (_appdbContext.SaveChanges() > 0)
             {
-                return Ok("Done");
+                return Ok("Booking created successfully.");
             }
             else
             {
-                return BadRequest("Something went wrong");
+                return BadRequest("Something went wrong while creating the booking.");
             }
         }
+
 
         [HttpPut("{bookingId}/{status}")]
         public IActionResult Post(int bookingId,string status)

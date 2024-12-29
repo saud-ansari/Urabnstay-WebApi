@@ -289,9 +289,9 @@ namespace Urbanstay.WebApi.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadImages(List<IFormFile> files)
+        public async Task<IActionResult> UploadImages(List<IFormFile> File)
         {
-            if (files == null || files.Count != 5)
+            if (File == null || File.Count != 5)
             {
                 return BadRequest("Please upload exactly 5 images.");
             }
@@ -299,7 +299,7 @@ namespace Urbanstay.WebApi.Controllers
             var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "PropertyImg");
             var imagePaths = new List<string>();
 
-            foreach (var file in files)
+            foreach (var file in File)
             {
                 if (file.Length > 0)
                 {

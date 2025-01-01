@@ -48,6 +48,41 @@ namespace Urbanstay.WebApi.Controllers
             return Ok(order);
         }
 
+        [HttpGet("byId/{bookId:int}")]
+        public IActionResult GetByBookingId(int bookId)
+        {
+            var booking = _appdbContext.Bookings.Where(x => x.BookingId == bookId).Select(x => new
+            {
+                x.BookingId,
+                propertyName = x.Property.Title,
+                GuestName = x.Guest.FirstName + " " + x.Guest.LastName,
+                HostName = x.Host.FirstName + " " + x.Host.LastName,
+                x.Property.ImagePath,
+                x.Property.ImagePath2,
+                x.Property.ImagePath3,
+                x.Property.ImagePath4,
+                x.Property.ImagePath5,
+                x.CheckInDate,
+                x.CheckOutDate,
+                x.NumberOfGuests,
+                x.TotalPrice,
+                x.Status,
+                x.CreatedAt,
+                x.UpdatedAt,
+                Payment = x.Payments.Select(p => new
+                {
+                    p.Amount,
+                    p.PaymentStatus,
+                    p.PaymentMethod,
+                    p.TransactionId,
+                }),
+                x.Guest.Username,
+                x.Guest.Email,
+                x.Guest.MobileNo
+            }).ToList();
+            return Ok (booking);
+        }
+
         [HttpGet("{hostid:int}")]
         public IActionResult GetById(int hostid)
         {
@@ -71,10 +106,50 @@ namespace Urbanstay.WebApi.Controllers
                 Payment = x.Payments.Select(p => new
                 {
                     p.Amount,
-                    p.PaymentStatus
-                })
+                    p.PaymentStatus,
+                    p.PaymentMethod,
+                    p.TransactionId,
+                }),
+                x.Guest.Username,
+                x.Guest.Email,
+                x.Guest.MobileNo               
             }).ToList();
             return Ok(user);
+        }
+
+        [HttpGet("guest/{guestId:int}")]
+        public IActionResult GetByGuestId(int guestId)
+        {
+            var booking = _appdbContext.Bookings.Where(x=> x.GuestId == guestId).Select(x=> new
+            {
+                x.BookingId,
+                propertyName = x.Property.Title,
+                GuestName = x.Guest.FirstName + " " + x.Guest.LastName,
+                HostName = x.Host.FirstName + " " + x.Host.LastName,
+                x.Property.ImagePath,
+                x.Property.ImagePath2,
+                x.Property.ImagePath3,
+                x.Property.ImagePath4,
+                x.Property.ImagePath5,
+                x.CheckInDate,
+                x.CheckOutDate,
+                x.NumberOfGuests,
+                x.TotalPrice,
+                x.Status,
+                x.CreatedAt,
+                x.UpdatedAt,
+                Payment = x.Payments.Select(p => new
+                {
+                    p.Amount,
+                    p.PaymentStatus,
+                    p.PaymentMethod,
+                    p.TransactionId,
+                }),
+                x.Guest.Username,
+                x.Guest.Email,
+                x.Guest.MobileNo
+            }).ToList();
+            return Ok(booking);
         }
 
         [HttpPost]
@@ -122,14 +197,14 @@ namespace Urbanstay.WebApi.Controllers
         }
 
 
-        [HttpPut("{bookingId}/{status}")]
+        [HttpPost("{bookingId}/{status}")]
         public IActionResult Post(int bookingId,string status)
         {
             var order = _appdbContext.Bookings.FirstOrDefault(x=> x.BookingId == bookingId );
             if(order != null)
             {
                 order.Status = status;
-                if(status.ToLower() == "Confirmed".ToString().ToLower())
+                if(status.ToLower() == "Confirmed,Cancelled".ToString().ToLower())
                  order.UpdatedAt = DateTime.Now;                    
             }
             var result = _appdbContext.SaveChanges() > 0;

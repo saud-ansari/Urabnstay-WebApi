@@ -198,17 +198,32 @@ namespace Urbanstay.WebApi.Controllers
 
 
         [HttpPost("{bookingId}/{status}")]
-        public IActionResult Post(int bookingId,string status)
+        public IActionResult Post(int bookingId, string status)
         {
-            var order = _appdbContext.Bookings.FirstOrDefault(x=> x.BookingId == bookingId );
-            if(order != null)
+            var order = _appdbContext.Bookings.FirstOrDefault(x => x.BookingId == bookingId);
+
+            if (order != null)
             {
-                order.Status = status;
-                if(status.ToLower() == "Confirmed,Cancelled".ToString().ToLower())
-                 order.UpdatedAt = DateTime.Now;                    
+                // Validate status
+                var validStatuses = new[] { "Confirmed", "Cancelled" };
+                if (validStatuses.Contains(status, StringComparer.OrdinalIgnoreCase))
+                {
+                    order.Status = status;
+                    order.UpdatedAt = DateTime.Now; // Update the timestamp
+                }
+                else
+                {
+                    return BadRequest("Invalid status value. Allowed values: Confirmed, Cancelled.");
+                }
             }
+            else
+            {
+                return NotFound("Booking not found.");
+            }
+
             var result = _appdbContext.SaveChanges() > 0;
-            return Ok(result);
+            return Ok(new { Success = result });
         }
+
     }
 }

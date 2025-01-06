@@ -1,5 +1,5 @@
 ﻿
--- Drop the existing database if it exists
+--Drop the existing database if it exists
 --DROP DATABASE [Urbanstay]
 --GO
 
@@ -148,3 +148,25 @@ CREATE TABLE [Reviews]
 	[CreatedAt] DATETIME DEFAULT GETDATE()
 )
 
+INSERT INTO [Properties] (
+    [HostId], [Title], [Description], [IsActive], [Address], [City], [State], 
+    [Country], [ZipCode], [PropertyType], [PricePerNight], [AvailabilityCalendar], 
+    [HouseRules], [InstantBooking], [CreatedAt], [UpdatedAt], 
+    [ImagePath], [ImagePath2], [ImagePath3], [ImagePath4], [ImagePath5]
+) 
+VALUES
+(3, 'Cozy Studio Apartment', 'A small yet cozy studio apartment, ideal for solo travelers.', 1, '45 MG Road', 'Mumbai', 'Maharashtra', 'India', '400001', 'Studio', 1500.00, '{"availability": "all year"}', 'No pets allowed. Quiet hours after 10 PM.', 1, GETDATE(),GETDATE() , 'image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg', 'image5.jpg'),
+(5, 'Modern 2BHK Apartment', 'A modern 2BHK apartment in the heart of Bangalore.', 1, '17 Whitefield', 'Bangalore', 'Karnataka', 'India', '560066', 'Apartment', 3500.00, '{"availability": "all year"}', 'No smoking. No parties.', 1, GETDATE(), GETDATE(), 'image6.jpg', 'image7.jpg', 'image8.jpg', 'image9.jpg', 'image10.jpg'),
+(6, 'Luxury Penthouse', 'A luxurious penthouse with a stunning city view in Hyderabad.', 1, '21 Jubilee Hills', 'Hyderabad', 'Telangana', 'India', '500033', 'Penthouse', 8500.00, '{"availability": "all year"}', 'No loud music. No pets.', 1, GETDATE(),GETDATE(), 'image11.jpg', 'image12.jpg', 'image13.jpg', 'image14.jpg', 'image15.jpg'),
+(3, 'Heritage Villa', 'Experience royalty at this beautiful heritage villa in Jaipur.', 1, '9 Amer Fort Road', 'Jaipur', 'Rajasthan', 'India', '302002', 'Villa', 4500.00, '{"availability": "Jan-Mar, Oct-Dec"}', 'No smoking inside the property.', 1, GETDATE(),GETDATE(), 'image16.jpg', 'image17.jpg', 'image18.jpg', 'image19.jpg', 'image20.jpg'),
+(5, 'Beachfront Cottage', 'A serene beachfront cottage perfect for a peaceful getaway.', 1, '12 Beach Road', 'Goa', 'Goa', 'India', '403001', 'Cottage', 6000.00, '{"availability": "all year"}', 'No bonfires. No parties.', 1, GETDATE(), GETDATE(), 'image21.jpg', 'image22.jpg', 'image23.jpg', 'image24.jpg', 'image25.jpg'),
+(6, 'Cozy Hilltop Cabin', 'Charming cabin located in the serene hills of Manali.', 1, '23 Hilltop', 'Manali', 'Himachal Pradesh', 'India', '175131', 'Cabin', 3200.00, '{"availability": "Nov-Apr"}', 'Keep noise levels low after 9 PM.', 1, GETDATE(), GETDATE(), 'image26.jpg', 'image27.jpg', 'image28.jpg', 'image29.jpg', 'image30.jpg'),
+(3, 'Downtown 1BHK Flat', 'A 1BHK flat located in the heart of New Delhi.', 1, '98 Connaught Place', 'New Delhi', 'Delhi', 'India', '110001', 'Apartment', 2800.00, '{"availability": "all year"}', 'No loud music. Keep the place tidy.', 1, GETDATE(), GETDATE(), 'image31.jpg', 'image32.jpg', 'image33.jpg', 'image34.jpg', 'image35.jpg'),
+(5, 'Riverside Farmhouse', 'Relax by the river at this spacious farmhouse in Kerala.', 1, '77 River Road', 'Alleppey', 'Kerala', 'India', '688001', 'Farmhouse', 5000.00, '{"availability": "all year"}', 'No pets. No swimming after 8 PM.', 1, GETDATE(), GETDATE(), 'image36.jpg', 'image37.jpg', 'image38.jpg', 'image39.jpg', 'image40.jpg'),
+(6, 'Modern Studio in Pune', 'A newly furnished studio apartment in Pune.', 1, '12 Koregaon Park', 'Pune', 'Maharashtra', 'India', '411001', 'Studio', 1800.00, '{"availability": "all year"}', 'No pets. No smoking.', 1, GETDATE(),GETDATE(), 'image41.jpg', 'image42.jpg', 'image43.jpg', 'image44.jpg', 'image45.jpg'),
+(3, 'Scenic Lakeview Cabin', 'A peaceful cabin with a stunning lake view near Udaipur.', 1, '6 Lake Pichola Road', 'Udaipur', 'Rajasthan', 'India', '313001', 'Cabin', 3700.00, '{"availability": "Nov-Mar"}', 'No bonfires. No pets.', 1, GETDATE(), GETDATE(), 'image46.jpg', 'image47.jpg', 'image48.jpg', 'image49.jpg', 'image50.jpg'),
+(5, 'Urban 3BHK Apartment', 'Spacious 3BHK apartment perfect for families in Chennai.', 1, '11 T Nagar', 'Chennai', 'Tamil Nadu', 'India', '600017', 'Apartment', 4000.00, '{"availability": "all year"}', 'No smoking. No parties.', 1, GETDATE(), GETDATE(), 'image51.jpg', 'image52.jpg', 'image53.jpg', 'image54.jpg', 'image55.jpg'),
+(6, 'Luxury Villa with Pool', 'A luxurious villa with a private pool in Kochi.', 1, '88 MG Road', 'Kochi', 'Kerala', 'India', '682016', 'Villa', 7500.00, '{"availability": "all year"}', 'No parties. No pets.', 1, GETDATE(), GETDATE(), 'image56.jpg', 'image57.jpg', 'image58.jpg', 'image59.jpg', 'image60.jpg'),
+(3, 'Budget Room in Kolkata', 'Affordable room for solo travelers in Kolkata.', 1, '45 Park Street', 'Kolkata', 'West Bengal', 'India', '700016', 'Room', 1200.00, '{"availability": "all year"}', 'No pets. Keep the place tidy.', 1, GETDATE(), GETDATE(), 'image61.jpg', 'image62.jpg', 'image63.jpg', 'image64.jpg', 'image65.jpg'),
+(5, 'Rustic Cottage', 'Rustic yet modern cottage in the beautiful hills of Ooty.', 1, '23 Rose Garden Road', 'Ooty', 'Tamil Nadu', 'India', '643001', 'Cottage', 5500.00, '{"availability": "all year"}', 'No pets. No loud music.', 1, GETDATE(), GETDATE(), 'image66.jpg', 'image67.jpg', 'image68.jpg', 'image69.jpg', 'image70.jpg'),
+(6, 'Heritage Haveli', 'Stay in a historic haveli with traditional charm in Jodhpur.', 1, '17 Mehrangarh Fort Road', 'Jodhpur', 'Rajasthan', 'India', '342001', 'Haveli', 4700.00, '{"availability": "Oct-Apr"}', 'No pets. No smoking.', 1, GETDATE(), GETDATE(), 'image71.jpg', 'image72.jpg', 'image73.jpg', 'image74.jpg', 'image75.jpg');

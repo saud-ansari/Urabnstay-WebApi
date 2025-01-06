@@ -42,7 +42,7 @@ namespace Urbanstay.WebApi.Controllers
             payment.BookingId = _payment.BookingId;
             payment.Amount = _payment.Amount;
             payment.PaymentMethod = _payment.PaymentMethod;
-            payment.PaymentStatus = _payment.PaymentStatus;
+            payment.PaymentStatus = "SuccessFull";
             payment.TransactionId = _payment.TransactionId;
             payment.CreatedAt = DateTime.Now;
             _appdbContext.Payments.Add(payment);

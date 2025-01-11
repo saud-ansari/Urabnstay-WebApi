@@ -9,5 +9,6 @@
         public string UserRole { get; set; }
 
         public string ProfilePic { get; set; }
+
     }
 }

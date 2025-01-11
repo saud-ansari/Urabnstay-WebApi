@@ -56,6 +56,7 @@ namespace Urbanstay.WebApi.Controllers
                 x.BookingId,
                 propertyName = x.Property.Title,
                 GuestName = x.Guest.FirstName + " " + x.Guest.LastName,
+                GuestID = x.Guest.Id,
                 HostName = x.Host.FirstName + " " + x.Host.LastName,
                 x.Property.ImagePath,
                 x.Property.ImagePath2,
@@ -91,6 +92,7 @@ namespace Urbanstay.WebApi.Controllers
                 x.BookingId,
                 propertyName = x.Property.Title,
                 GuestName = x.Guest.FirstName + " " + x.Guest.LastName,
+                GuestID = x.GuestId,
                 x.Property.ImagePath,
                 x.Property.ImagePath2,
                 x.Property.ImagePath3,
@@ -222,7 +224,7 @@ namespace Urbanstay.WebApi.Controllers
             }
 
             var result = _appdbContext.SaveChanges() > 0;
-            return Ok(new { Success = result });
+            return Ok($"Your Booking Got {status}");
         }
 
     }

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Urbanstay.WebApi.Models;
+using Urbanstay.WebApi.Services;
 using Urbanstay.WebApi.ViewModels;
 
 namespace Urbanstay.WebApi.Controllers
@@ -12,10 +15,12 @@ namespace Urbanstay.WebApi.Controllers
     public class BookingController : ControllerBase
     {
         private readonly UrbanstayContext _appdbContext;
+        private readonly IConfiguration _configuration;
 
-        public BookingController()
+        public BookingController(IConfiguration configuration)
         {
             _appdbContext = new UrbanstayContext();
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -56,8 +61,10 @@ namespace Urbanstay.WebApi.Controllers
                 x.BookingId,
                 propertyName = x.Property.Title,
                 GuestName = x.Guest.FirstName + " " + x.Guest.LastName,
+                GuestEmail = x.Guest.Email,
                 GuestID = x.Guest.Id,
                 HostName = x.Host.FirstName + " " + x.Host.LastName,
+                HostEmail = x.Host.Email,
                 x.Property.ImagePath,
                 x.Property.ImagePath2,
                 x.Property.ImagePath3,
@@ -200,32 +207,45 @@ namespace Urbanstay.WebApi.Controllers
 
 
         [HttpPost("{bookingId}/{status}")]
-        public IActionResult Post(int bookingId, string status)
-        {
-            var order = _appdbContext.Bookings.FirstOrDefault(x => x.BookingId == bookingId);
-
-            if (order != null)
+        public async Task<IActionResult> UpdateBookingStatus(int bookingId, string status, [FromQuery] string fromemail,[FromQuery] string toName,[FromQuery] string toemail)
             {
-                // Validate status
-                var validStatuses = new[] { "Confirmed", "Cancelled" };
-                if (validStatuses.Contains(status, StringComparer.OrdinalIgnoreCase))
-                {
-                    order.Status = status;
-                    order.UpdatedAt = DateTime.Now; // Update the timestamp
-                }
-                else
-                {
-                    return BadRequest("Invalid status value. Allowed values: Confirmed, Cancelled.");
-                }
-            }
-            else
+            var order = _appdbContext.Bookings.Include(b => b.Property).FirstOrDefault(x => x.BookingId == bookingId);
+
+            if (order == null)
             {
                 return NotFound("Booking not found.");
             }
 
-            var result = _appdbContext.SaveChanges() > 0;
-            return Ok($"Your Booking Got {status}");
+            // Validate status
+            var validStatuses = new[] { "Confirmed", "Cancelled" };
+            if (!validStatuses.Contains(status, StringComparer.OrdinalIgnoreCase))
+            {
+                return BadRequest("Invalid status value. Allowed values: Confirmed, Cancelled.");
+            }
+
+            // Update the booking status
+            order.Status = status;
+            order.UpdatedAt = DateTime.Now;
+
+            // Prepare email text based on status
+            var emailText = status.Equals("Confirmed", StringComparison.OrdinalIgnoreCase)
+                ? $"Your booking has been successfully confirmed for '{order.Property.Title}'!"
+                : $"Unfortunately, your booking has been cancelled for '{order.Property.Title}'";
+
+            var emailService = new EmailServices(_configuration);
+            await emailService.SendEmail(
+                fromName: "UrbanStay",
+                fromemail:fromemail,
+                toName: toName,
+                toemail: toemail,
+                subject: "Booking Status Update",
+                body: emailText
+            );
+
+            _appdbContext.SaveChanges();
+            return Ok($"Booking status updated to '{status}' and email sent to the user.");
         }
+
 
     }
 }

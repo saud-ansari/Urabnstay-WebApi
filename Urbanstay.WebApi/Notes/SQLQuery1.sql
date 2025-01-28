@@ -104,7 +104,14 @@ CREATE TABLE [Properties]
     [ImagePath5] VARCHAR(50)
 )
 
---SELECT * FROM [Properties]
+--ALTER TABLE [Properties]
+--ADD [latitude] FLOAT;
+--ADD [longitude] FLOAT;
+
+--UPDATE [Properties] SET [latitude] = '51.5072' where [PropertyId] = 1;
+--UPDATE [Properties] SET [longitude] = '0.1276' where [PropertyId] = 1;
+
+SELECT * FROM [Properties]
 
 --****************************************************************************************************
 -- Create the Bookings table

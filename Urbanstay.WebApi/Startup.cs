@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Urbanstay.WebApi.Services;
 
 namespace Urbanstay.WebApi
 {
@@ -21,6 +22,8 @@ namespace Urbanstay.WebApi
         {
             services.AddCors();
             services.AddControllers();
+            services.AddScoped<ContactUsServices>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Urbanstay.WebApi", Version = "v1" });

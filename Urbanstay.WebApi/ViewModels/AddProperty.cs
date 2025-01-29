@@ -52,6 +52,8 @@ namespace Urbanstay.WebApi.ViewModels
             public string ImagePath3 { get; set; }
             public string ImagePath4 { get; set; }
             public string ImagePath5 { get; set; }
+            public double Longitude { get; set; }
+            public double Latitude { get; set; }
         }
 
         public static implicit operator AddProperty(Property v)

@@ -35,6 +35,8 @@ namespace Urbanstay.WebApi.Models
         public string ImagePath3 { get; set; }
         public string ImagePath4 { get; set; }
         public string ImagePath5 { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
 
         public virtual User Host { get; set; }
         public virtual ICollection<Booking> Bookings { get; set; }

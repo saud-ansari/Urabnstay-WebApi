@@ -49,6 +49,8 @@ namespace Urbanstay.WebApi.Controllers
                 x.InstantBooking,
                 x.CreatedAt,
                 x.UpdatedAt,
+                x.Longitude,
+                x.Latitude,
                 Review = x.Reviews.Select(r => new
                 {
                     r.PropertyId,
@@ -88,6 +90,8 @@ namespace Urbanstay.WebApi.Controllers
                 x.InstantBooking,
                 x.CreatedAt,
                 x.UpdatedAt,
+                x.Longitude,
+                x.Latitude,
                 Review = x.Reviews.Select(r => new
                 {
                     r.PropertyId,
@@ -127,6 +131,8 @@ namespace Urbanstay.WebApi.Controllers
                 x.InstantBooking,
                 x.CreatedAt,
                 x.UpdatedAt,
+                x.Longitude,
+                x.Latitude,
                 Review = x.Reviews.Select(r => new
                 {
                     r.PropertyId,
@@ -262,6 +268,8 @@ namespace Urbanstay.WebApi.Controllers
                 property.ImagePath3 = _property.ImagePath3;
                 property.ImagePath4 = _property.ImagePath4;
                 property.ImagePath5 = _property.ImagePath5;
+                property.Longitude = _property.Longitude;
+                property.Latitude = _property.Latitude;
                 property.UpdatedAt = DateTime.Now;
             }
 

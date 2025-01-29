@@ -17,6 +17,9 @@ Command for Generate Dbcontext Class
 Command for Update Dbcontext Class 
 > Scaffold-DbContext "Server=DESKTOP-IDTO19J;Database=Urbanstay;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
 
+> Scaffold-DbContext "Server=LAPTOP-QHVU91B5\SQLEXPRESS01;Database=Urbanstay;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -force
+
+
 ****************************************************************************************************
 
 

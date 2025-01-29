@@ -165,6 +165,10 @@ namespace Urbanstay.WebApi.Models
 
                 entity.Property(e => e.InstantBooking).HasDefaultValueSql("((0))");
 
+                entity.Property(e => e.Latitude).HasColumnName("latitude");
+
+                entity.Property(e => e.Longitude).HasColumnName("longitude");
+
                 entity.Property(e => e.PricePerNight).HasColumnType("decimal(10, 2)");
 
                 entity.Property(e => e.PropertyType)

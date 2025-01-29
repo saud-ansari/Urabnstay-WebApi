@@ -106,6 +106,8 @@ CREATE TABLE [Properties]
 
 --ALTER TABLE [Properties]
 --ADD [latitude] FLOAT;
+
+--ALTER TABLE [Properties]
 --ADD [longitude] FLOAT;
 
 --UPDATE [Properties] SET [latitude] = '51.5072' where [PropertyId] = 1;

@@ -46,28 +46,6 @@ namespace Urbanstay.WebApi.Controllers
             return users;
         }
 
-        [HttpGet("/tenant")]
-        public IActionResult GetTenanatCount()
-        {
-            var count = dbContext.Users.Where(x => x.RoleId == 4).Count();
-            return Ok(count);
-        }
-
-        [HttpGet("/LandLordCount")]
-        public IActionResult GetLandLordCount()
-        {
-            var count = dbContext.Users.Where(x => x.RoleId == 3).Count();
-            return Ok(count);
-        }
-
-        [HttpGet("/PropertyCount")]
-        public IActionResult GetPropertyCount()
-        {
-            var count = dbContext.Properties.Count();
-            return Ok(count);
-        }
-
-
         [HttpGet("{id:int}")]
         public UserModel GetById(int id)
         {

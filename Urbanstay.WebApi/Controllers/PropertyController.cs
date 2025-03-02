@@ -208,7 +208,7 @@ namespace Urbanstay.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddProperty _addProperty, [FromQuery] string fromemail, [FromQuery] string toName, [FromQuery] string toemail)
+        public async Task<IActionResult> Post([FromBody] AddProperty _addProperty)
         {
             var property = _appdbContext.Properties
                 .Where(x => x.Title.ToLower() == _addProperty.Title.ToLower())
@@ -251,20 +251,7 @@ namespace Urbanstay.WebApi.Controllers
 
             if (result)
             {
-                // Email Notification Logic
-                var emailText = $"A booking has been placed for your property '{_addProperty.Title}'!";
-
-                var BookingNotifyEmail = new EmailServices(_configuration);
-                await BookingNotifyEmail.SendEmail(
-                   fromName: "UrbanStay",
-                    fromemail: fromemail,
-                    toName: toName,
-                    toemail: toemail,
-                    subject: "You received a customer",
-                    body: emailText
-                );
-
-                return Ok(new { Message = "Property added successfully and email sent." });
+                return Ok(new { Message = "Property added successfully" });
             }
 
             return BadRequest(new { Message = "Failed to add property." });

@@ -205,7 +205,6 @@ namespace Urbanstay.WebApi.Controllers
             }
         }
 
-
         [HttpPost("{bookingId}/{status}")]
         public async Task<IActionResult> UpdateBookingStatus(int bookingId, string status, [FromQuery] string fromemail,[FromQuery] string toName,[FromQuery] string toemail)
             {

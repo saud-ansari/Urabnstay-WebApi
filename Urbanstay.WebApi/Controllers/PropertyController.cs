@@ -1,12 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Urbanstay.WebApi.Models;
+using Urbanstay.WebApi.Services;
 using Urbanstay.WebApi.ViewModels;
+using MailKit.Net.Smtp;
+using Microsoft.Extensions.Configuration;
+using MimeKit;
+using System;
+using System.Threading.Tasks;
 using static Urbanstay.WebApi.ViewModels.AddProperty;
 
 namespace Urbanstay.WebApi.Controllers
@@ -16,10 +24,12 @@ namespace Urbanstay.WebApi.Controllers
     public class PropertyController : ControllerBase
     {
         private readonly UrbanstayContext _appdbContext;
+        private readonly IConfiguration _configuration;
 
-        public PropertyController()
+        public PropertyController(IConfiguration configuration)
         {
             _appdbContext = new UrbanstayContext();
+            _configuration = configuration;
         }
 
         [HttpGet]
@@ -198,50 +208,73 @@ namespace Urbanstay.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post(AddProperty _addProperty)
+        public async Task<IActionResult> Post([FromBody] AddProperty _addProperty, [FromQuery] string fromemail, [FromQuery] string toName, [FromQuery] string toemail)
         {
-            var property = _appdbContext.Properties.Where(x => x.Title.ToLower() == _addProperty.Title.ToLower()).FirstOrDefault();
+            var property = _appdbContext.Properties
+                .Where(x => x.Title.ToLower() == _addProperty.Title.ToLower())
+                .FirstOrDefault();
+
             if (property != null)
             {
                 return Conflict(new { Message = "Already Added Property" });
             }
-            else
-            {
-                property = new Property
-                {
-                    HostId = _addProperty.HostId,
-                    Title = _addProperty.Title,
-                    Description = _addProperty.Description,
-                    IsActive = _addProperty.IsActive,
-                    Address = _addProperty.Address,
-                    City = _addProperty.City,
-                    Country = _addProperty.Country,
-                    State = _addProperty.State,
-                    ZipCode = _addProperty.ZipCode,
-                    PropertyType = _addProperty.PropertyType,
-                    PricePerNight = _addProperty.PricePerNight,
-                    AvailabilityCalendar = _addProperty.AvailabilityCalendar,
-                    HouseRules = _addProperty.HouseRules,
-                    InstantBooking = _addProperty.InstantBooking,
-                    ImagePath = _addProperty.ImagePath,
-                    ImagePath2 = _addProperty.ImagePath2,
-                    ImagePath3 = _addProperty.ImagePath3,
-                    ImagePath4 = _addProperty.ImagePath4,
-                    ImagePath5 = _addProperty.ImagePath5,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = null
-                };
-            }
-            _appdbContext.Properties.Add(property);
-            var result = _appdbContext.SaveChanges() > 0;
-            return Ok(result);
 
+            // Create a new property object
+            property = new Property
+            {
+                HostId = _addProperty.HostId,
+                Title = _addProperty.Title,
+                Description = _addProperty.Description,
+                IsActive = _addProperty.IsActive,
+                Address = _addProperty.Address,
+                City = _addProperty.City,
+                Country = _addProperty.Country,
+                State = _addProperty.State,
+                ZipCode = _addProperty.ZipCode,
+                PropertyType = _addProperty.PropertyType,
+                PricePerNight = _addProperty.PricePerNight,
+                AvailabilityCalendar = _addProperty.AvailabilityCalendar,
+                HouseRules = _addProperty.HouseRules,
+                InstantBooking = _addProperty.InstantBooking,
+                ImagePath = _addProperty.ImagePath,
+                ImagePath2 = _addProperty.ImagePath2,
+                ImagePath3 = _addProperty.ImagePath3,
+                ImagePath4 = _addProperty.ImagePath4,
+                ImagePath5 = _addProperty.ImagePath5,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = null
+            };
+
+            // Add property to database
+            _appdbContext.Properties.Add(property);
+            var result = await _appdbContext.SaveChangesAsync() > 0;
+
+            if (result)
+            {
+                // Email Notification Logic
+                var emailText = $"A booking has been placed for your property '{_addProperty.Title}'!";
+
+                var BookingNotifyEmail = new EmailServices(_configuration);
+                await BookingNotifyEmail.SendEmail(
+                   fromName: "UrbanStay",
+                    fromemail: fromemail,
+                    toName: toName,
+                    toemail: toemail,
+                    subject: "You received a customer",
+                    body: emailText
+                );
+
+                return Ok(new { Message = "Property added successfully and email sent." });
+            }
+
+            return BadRequest(new { Message = "Failed to add property." });
         }
+
 
         [HttpPut("{id:int}")]
         public IActionResult Put(int id, EditProperty _property)
         {
-            var property = _appdbContext.Properties.Where(x => x.PropertyId == id ).FirstOrDefault();
+            var property = _appdbContext.Properties.Where(x => x.PropertyId == id).FirstOrDefault();
 
             if (property == null)
             {
